@@ -16,9 +16,12 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   )
   context.subscriptions.push(
-    vscode.commands.registerCommand('vstodos.refresh', () => {
-      HelloWorldPanel.kill()
-      HelloWorldPanel.createOrShow(context.extensionUri)
+    vscode.commands.registerCommand('vstodos.refresh', async () => {
+      // HelloWorldPanel.kill()
+      // HelloWorldPanel.createOrShow(context.extensionUri)
+
+      await vscode.commands.executeCommand('workbench.action.closeSidebar')
+      await vscode.commands.executeCommand('workbench.view.extension.vstodos-sidebar-view')
 
       setTimeout(() => {
         vscode.commands.executeCommand('workbench.action.webview.openDeveloperTools')
