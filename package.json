@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:vstodos.helloWorld",
-    "onCommand:vstodos.askQuestion"
+    "onCommand:vstodos.askQuestion",
+    "onCommand:vstodos.refresh"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -24,6 +25,11 @@
         "command": "vstodos.askQuestion",
         "category": "VS Todos",
         "title": "Ask Question"
+      },
+      {
+        "command": "vstodos.refresh",
+        "category": "VS Todos",
+        "title": "Refresh"
       }
     ]
   },

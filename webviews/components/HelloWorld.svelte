@@ -1,4 +1,4 @@
 <script lang="ts">
 </script>
 
-<h1>Hello World from Svelte components!</h1>
+<h1>Hello World from Arsam!</h1>
