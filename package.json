@@ -11,17 +11,13 @@
   ],
   "activationEvents": [
     "onView:vstodos-sidebar",
-    "onCommand:vstodos.helloWorld",
     "onCommand:vstodos.askQuestion",
-    "onCommand:vstodos.refresh"
+    "onCommand:vstodos.refresh",
+    "onCommand:vstodos.addTodo"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "vstodos.helloWorld",
-        "title": "Hello World"
-      },
       {
         "command": "vstodos.askQuestion",
         "category": "VS Todos",
@@ -31,6 +27,11 @@
         "command": "vstodos.refresh",
         "category": "VS Todos",
         "title": "Refresh"
+      },
+      {
+        "command": "vstodos.addTodo",
+        "category": "VS Todos",
+        "title": "Add TODO from selection"
       }
     ],
     "viewsContainers": {

@@ -1,6 +1,20 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
+
   let todos: Array<{ text: string; completed: boolean }> = []
   let text = ''
+
+  onMount(() => {
+    window.addEventListener('message', (event) => {
+      const message = event.data
+      switch (message.type) {
+        case 'new-todo': {
+          todos = [{ text: message.value, completed: false }, ...todos]
+          break
+        }
+      }
+    })
+  })
 </script>
 
 <form
@@ -24,10 +38,6 @@
     </li>
   {/each}
 </ul>
-
-<pre>
-  {JSON.stringify(todos, null, 2)}
-</pre>
 
 <style>
   input {
