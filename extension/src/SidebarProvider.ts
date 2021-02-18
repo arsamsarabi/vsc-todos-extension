@@ -1,6 +1,9 @@
 import * as vscode from 'vscode'
 
+import { authenticate } from './authenticate'
+import { apiBaseUrl } from './constants'
 import { getNonce } from './getNonce'
+import { TokenManager } from './TokenManager'
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView
@@ -12,9 +15,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     this._view = webviewView
 
     webviewView.webview.options = {
-      // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._extensionUri],
     }
 
@@ -22,6 +23,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async ({ value, type }) => {
       switch (type) {
+        case 'logout': {
+          TokenManager.setToken('')
+          break
+        }
+        case 'authenticate': {
+          authenticate(() =>
+            webviewView.webview.postMessage({ type: 'token', value: TokenManager.getToken() }),
+          )
+          break
+        }
+        case 'get-token': {
+          webviewView.webview.postMessage({ type: 'token', value: TokenManager.getToken() })
+          break
+        }
         case 'onInfo': {
           if (!value) {
             return
@@ -70,13 +85,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}';">
+        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${
+          webview.cspSource
+        }; script-src 'nonce-${nonce}';">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <script nonce="${nonce}">
           const tsvscode = acquireVsCodeApi();
+          const apiBaseUrl = ${JSON.stringify(apiBaseUrl)};
         </script>
 			</head>
       <body>

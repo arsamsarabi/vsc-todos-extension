@@ -1,9 +1,12 @@
 import * as vscode from 'vscode'
 
-import { HelloWorldPanel } from './HelloWorldPanel'
 import { SidebarProvider } from './SidebarProvider'
+import { authenticate } from './authenticate'
+import { TokenManager } from './TokenManager'
 
 export function activate(context: vscode.ExtensionContext) {
+  TokenManager.globalState = context.globalState
+
   const sidebarProvider = new SidebarProvider(context.extensionUri)
 
   const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right)
@@ -29,16 +32,20 @@ export function activate(context: vscode.ExtensionContext) {
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('vstodos.refresh', async () => {
-      // HelloWorldPanel.kill()
-      // HelloWorldPanel.createOrShow(context.extensionUri)
+    vscode.commands.registerCommand('vstodos.authenticate', () => {
+      authenticate(() =>
+        sidebarProvider._view?.webview.postMessage({
+          type: 'token',
+          value: TokenManager.getToken(),
+        }),
+      )
+    }),
+  )
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand('vstodos.refresh', async () => {
       await vscode.commands.executeCommand('workbench.action.closeSidebar')
       await vscode.commands.executeCommand('workbench.view.extension.vstodos-sidebar-view')
-
-      // setTimeout(() => {
-      //   vscode.commands.executeCommand('workbench.action.webview.openDeveloperTools')
-      // }, 500)
     }),
   )
 
