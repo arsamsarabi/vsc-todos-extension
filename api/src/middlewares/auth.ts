@@ -15,7 +15,7 @@ export const authMiddleware: RequestHandler<{}, any, any, {}> = (
 
   try {
     const payload: any = jwt.verify(token || '', JWT_SECRET)
-    res.locals.userId = payload.userId
+    req.userId = payload.userId
     next()
     return
   } catch {}

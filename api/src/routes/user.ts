@@ -4,8 +4,8 @@ import User from '../db/models/User'
 
 const router = express.Router()
 
-router.get('/me', async (_, res) => {
-  const user = await User.findById(res.locals.userId)
+router.get('/me', async (req, res) => {
+  const user = await User.findById(req.userId)
   return res.status(200).send({ user })
 })
 

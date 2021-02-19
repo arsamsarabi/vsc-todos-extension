@@ -6,7 +6,7 @@ import User from '../db/models/User'
 const router = express.Router()
 
 router.post('/', async (req, res) => {
-  const { userId } = res.locals
+  const { userId } = req
   const todo = new Todo({
     text: req.body.text,
     creatorId: userId,
@@ -17,8 +17,8 @@ router.post('/', async (req, res) => {
   return res.status(200).send({ todo })
 })
 
-router.get('/', async (_, res) => {
-  const { userId } = res.locals
+router.get('/', async (req, res) => {
+  const { userId } = req
   const todos = await Todo.find({ creatorId: userId }).sort({ createdAt: 'desc' })
   return res.status(200).send({ todos })
 })
